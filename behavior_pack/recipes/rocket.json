@@ -1,0 +1,21 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "space:rocket_recipe"
+    },
+    "tags": ["crafting_table"],
+    "pattern": [
+      " I ",
+      "IPI",
+      "III"
+    ],
+    "key": {
+      "I": { "item": "minecraft:iron_block" },
+      "P": { "item": "minecraft:piston" }
+    },
+    "result": {
+      "item": "space:rocket_item"
+    }
+  }
+}

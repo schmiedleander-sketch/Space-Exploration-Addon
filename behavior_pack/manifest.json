@@ -1,0 +1,36 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "Space Exploration Addon - Behavior Pack",
+        "name": "Space Exploration BP",
+        "uuid": "37d4b623-cabc-49b8-873e-5a48079c153d",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 20, 0]
+    },
+    "modules": [
+        {
+            "description": "Behavior Module",
+            "type": "data",
+            "uuid": "72fb4f18-cfb1-464e-88fb-8931d4f0e579",
+            "version": [1, 0, 0]
+        },
+        {
+            "description": "Script Module",
+            "type": "script",
+            "language": "javascript",
+            "uuid": "746cbebe-104a-453e-a8aa-d01458653596",
+            "entry": "scripts/main.js",
+            "version": [1, 0, 0]
+        }
+    ],
+    "dependencies": [
+        {
+            "module_name": "@minecraft/server",
+            "version": "1.10.0"
+        },
+        {
+            "uuid": "4da737e6-7440-425f-b54d-42f980bc61ee",
+            "version": [1, 0, 0]
+        }
+    ]
+}

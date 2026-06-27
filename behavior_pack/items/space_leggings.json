@@ -1,0 +1,18 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:item": {
+        "description": {
+            "identifier": "space:space_leggings",
+            "menu_category": {
+                "category": "equipment",
+                "group": "itemGroup.name.leggings"
+            }
+        },
+        "components": {
+            "minecraft:display_name": { "value": "item.space:space_leggings.name" },
+            "minecraft:icon": { "texture": "space_leggings" },
+            "minecraft:armor": { "protection": 5 },
+            "minecraft:wearable": { "slot": "slot.armor.legs" }
+        }
+    }
+}

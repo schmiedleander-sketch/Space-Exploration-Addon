@@ -1,0 +1,18 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "Space Exploration Addon - Resource Pack",
+        "name": "Space Exploration RP",
+        "uuid": "4da737e6-7440-425f-b54d-42f980bc61ee",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 20, 0]
+    },
+    "modules": [
+        {
+            "description": "Resource Module",
+            "type": "resources",
+            "uuid": "dff83500-fa7c-459e-9193-658a49ccd4f8",
+            "version": [1, 0, 0]
+        }
+    ]
+}

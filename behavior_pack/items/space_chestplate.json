@@ -1,0 +1,18 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:item": {
+        "description": {
+            "identifier": "space:space_chestplate",
+            "menu_category": {
+                "category": "equipment",
+                "group": "itemGroup.name.chestplate"
+            }
+        },
+        "components": {
+            "minecraft:display_name": { "value": "item.space:space_chestplate.name" },
+            "minecraft:icon": { "texture": "space_chestplate" },
+            "minecraft:armor": { "protection": 6 },
+            "minecraft:wearable": { "slot": "slot.armor.chest" }
+        }
+    }
+}

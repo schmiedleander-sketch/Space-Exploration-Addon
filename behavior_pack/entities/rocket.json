@@ -1,0 +1,44 @@
+{
+  "format_version": "1.16.0",
+  "minecraft:entity": {
+    "description": {
+      "identifier": "space:rocket",
+      "is_spawnable": true,
+      "is_summonable": true,
+      "is_experimental": false
+    },
+    "components": {
+      "minecraft:physics": {},
+      "minecraft:nameable": {},
+      "minecraft:health": {
+        "value": 20,
+        "max": 20
+      },
+      "minecraft:collision_box": {
+        "width": 1.2,
+        "height": 2.5
+      },
+      "minecraft:rideable": {
+        "seat_count": 1,
+        "family_types": [
+          "player"
+        ],
+        "interact_text": "Ride Rocket",
+        "seats": [
+          {
+            "position": [0, 0.5, 0]
+          }
+        ]
+      },
+      "minecraft:movement": {
+        "value": 0.0
+      },
+      "minecraft:type_family": {
+        "family": [
+          "rocket",
+          "inanimate"
+        ]
+      }
+    }
+  }
+}

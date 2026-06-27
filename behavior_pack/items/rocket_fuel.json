@@ -1,0 +1,16 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:item": {
+        "description": {
+            "identifier": "space:rocket_fuel",
+            "menu_category": {
+                "category": "items"
+            }
+        },
+        "components": {
+            "minecraft:display_name": { "value": "item.space:rocket_fuel.name" },
+            "minecraft:icon": { "texture": "rocket_fuel" },
+            "minecraft:stack_size": 16
+        }
+    }
+}

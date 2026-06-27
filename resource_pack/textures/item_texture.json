@@ -1,0 +1,23 @@
+{
+  "resource_pack_name": "space_exploration",
+  "texture_data": {
+    "space_helmet": {
+      "textures": "textures/items/space_helmet"
+    },
+    "space_chestplate": {
+      "textures": "textures/items/space_chestplate"
+    },
+    "space_leggings": {
+      "textures": "textures/items/space_leggings"
+    },
+    "space_boots": {
+      "textures": "textures/items/space_boots"
+    },
+    "rocket_fuel": {
+      "textures": "textures/items/rocket_fuel"
+    },
+    "rocket_item": {
+      "textures": "textures/items/rocket"
+    }
+  }
+}

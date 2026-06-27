@@ -1,0 +1,19 @@
+{
+    "format_version": "1.20.0",
+    "minecraft:item": {
+        "description": {
+            "identifier": "space:rocket_item",
+            "menu_category": {
+                "category": "items"
+            }
+        },
+        "components": {
+            "minecraft:display_name": { "value": "item.space:rocket.name" },
+            "minecraft:icon": { "texture": "rocket_item" },
+            "minecraft:spawn_entity": {
+                "entity": "space:rocket"
+            },
+            "minecraft:stack_size": 1
+        }
+    }
+}
