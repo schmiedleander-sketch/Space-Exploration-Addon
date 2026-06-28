@@ -7,89 +7,97 @@ def make_chunk(type, data):
     crc = struct.pack('>I', zlib.crc32(type + data) & 0xffffffff)
     return length + type + data + crc
 
-class TextureGenerator:
-    def __init__(self, width, height):
+class ProArtist:
+    def __init__(self, width, height, bg=(0, 0, 0, 0)):
         self.width = width
         self.height = height
-        self.pixels = [[(0, 0, 0) for _ in range(width)] for _ in range(height)]
+        self.pixels = [[bg for _ in range(width)] for _ in range(height)]
 
-    def fill_rect(self, x, y, w, h, color):
-        for i in range(y, min(y + h, self.height)):
-            for j in range(x, min(x + w, self.width)):
-                # Add slight noise for texture
-                r = max(0, min(255, color[0] + random.randint(-10, 10)))
-                g = max(0, min(255, color[1] + random.randint(-10, 10)))
-                b = max(0, min(255, color[2] + random.randint(-10, 10)))
-                self.pixels[i][j] = (r, g, b)
+    def set_pixel(self, x, y, color):
+        if 0 <= x < self.width and 0 <= y < self.height:
+            if len(color) == 3:
+                self.pixels[y][x] = (*color, 255)
+            else:
+                self.pixels[y][x] = color
 
-    def draw_pattern(self, x, y, w, h, color1, color2, vertical=True):
-        for i in range(y, min(y + h, self.height)):
-            for j in range(x, min(x + w, self.width)):
-                choice = color1 if (i if vertical else j) % 2 == 0 else color2
-                r = max(0, min(255, choice[0] + random.randint(-5, 5)))
-                g = max(0, min(255, choice[1] + random.randint(-5, 5)))
-                b = max(0, min(255, choice[2] + random.randint(-5, 5)))
-                self.pixels[i][j] = (r, g, b)
+    def brush_stroke(self, x, y, w, h, color, density=0.5):
+        for i in range(y, y + h):
+            for j in range(x, x + w):
+                if random.random() < density:
+                    # Randomize color slightly
+                    n = random.randint(-15, 15)
+                    c = tuple(max(0, min(255, channel + n)) for channel in color[:3])
+                    a = color[3] if len(color) == 4 else 255
+                    self.set_pixel(j, i, (*c, a))
+
+    def paint_uv_box(self, u, v, w, h, d, color):
+        # Top
+        self.brush_stroke(u + d, v, w, d, tuple(min(255, c + 30) for c in color), 0.9)
+        # Bottom
+        self.brush_stroke(u + d + w, v, w, d, tuple(max(0, c - 40) for c in color), 0.9)
+        # West
+        self.brush_stroke(u, v + d, d, h, color, 0.9)
+        # North
+        self.brush_stroke(u + d, v + d, w, h, tuple(max(0, c - 10) for c in color), 0.9)
+        # East
+        self.brush_stroke(u + d + w, v + d, d, h, color, 0.9)
+        # South
+        self.brush_stroke(u + d + w + d, v + d, w, h, tuple(max(0, c - 20) for c in color), 0.9)
 
     def save(self, filename):
         png_header = b'\x89PNG\r\n\x1a\n'
-        ihdr_data = struct.pack('>IIBBBBB', self.width, self.height, 8, 2, 0, 0, 0)
+        ihdr_data = struct.pack('>IIBBBBB', self.width, self.height, 8, 6, 0, 0, 0)
         ihdr_chunk = make_chunk(b'IHDR', ihdr_data)
-
         all_rows = b''
         for row in self.pixels:
             row_bytes = b'\x00'
             for p in row:
-                row_bytes += struct.pack('BBB', *p)
+                row_bytes += struct.pack('BBBB', *p)
             all_rows += row_bytes
-
         idat_data = zlib.compress(all_rows)
         idat_chunk = make_chunk(b'IDAT', idat_data)
         iend_chunk = make_chunk(b'IEND', b'')
-
         with open(filename, 'wb') as f:
             f.write(png_header + ihdr_chunk + idat_chunk + iend_chunk)
 
-# --- Forest Guardian (128x128) ---
-# UVs: head [0,0], body [0,40], body2 [0,70], arms [60,21], [60,58], legs [37,0], [60,0]
-fg = TextureGenerator(128, 128)
-# Base mossy green
-fg.fill_rect(0, 0, 128, 128, (45, 90, 45))
-# Head (Woody/Mossy)
-fg.draw_pattern(0, 0, 32, 32, (80, 60, 40), (100, 80, 60), vertical=False) # Wood grain
-# Body (Thick Bark)
-fg.draw_pattern(0, 40, 60, 30, (60, 40, 20), (80, 60, 40))
-# Arms/Legs
-fg.fill_rect(60, 21, 40, 40, (100, 120, 100)) # Vines
-fg.fill_rect(37, 0, 20, 20, (50, 30, 10)) # Roots
+# --- Forest Guardian ---
+fg = ProArtist(128, 128)
+bark = (80, 50, 30)
+leaf = (34, 100, 34)
+fg.paint_uv_box(0, 0, 8, 10, 8, bark)
+fg.brush_stroke(9, 10, 2, 2, (0, 255, 255), 1.0) # Eyes
+fg.brush_stroke(13, 10, 2, 2, (0, 255, 255), 1.0)
+fg.paint_uv_box(0, 40, 18, 12, 11, bark)
+fg.brush_stroke(11, 51, 18, 12, leaf, 0.6) # Mossy front
+fg.paint_uv_box(60, 21, 4, 28, 6, bark)
+fg.paint_uv_box(60, 58, 4, 28, 6, bark)
+fg.paint_uv_box(37, 0, 6, 12, 5, bark)
+fg.paint_uv_box(60, 0, 6, 12, 5, bark)
 fg.save('RP/textures/entity/forest_guardian.png')
 
-# --- Desert Stinger (64x64) ---
-# UVs: head [32,4], body0 [0,0], body1 [0,12], legs [18,0]
-ds = TextureGenerator(64, 64)
-# Sandy Base
-ds.fill_rect(0, 0, 64, 64, (194, 178, 128))
-# Head (Black eyes/Red patterns)
-ds.fill_rect(32, 4, 16, 16, (30, 30, 30))
-ds.fill_rect(34, 6, 4, 4, (200, 0, 0)) # Eye spot
-# Body Segments
-ds.draw_pattern(0, 0, 32, 12, (100, 80, 40), (130, 110, 70), vertical=True)
-ds.draw_pattern(0, 12, 32, 20, (100, 80, 40), (130, 110, 70), vertical=True)
-# Legs (Darker)
-ds.fill_rect(18, 0, 14, 14, (60, 50, 30))
+# --- Desert Stinger ---
+ds = ProArtist(64, 64, (210, 180, 140, 255))
+chitin = (110, 60, 20)
+ds.paint_uv_box(0, 0, 6, 6, 6, chitin)
+ds.paint_uv_box(0, 12, 10, 8, 12, chitin)
+ds.paint_uv_box(32, 4, 8, 8, 8, (30, 30, 30)) # Head
+ds.brush_stroke(41, 13, 1, 1, (255, 0, 0), 1.0) # Red eyes
+ds.brush_stroke(46, 13, 1, 1, (255, 0, 0), 1.0)
+ds.paint_uv_box(18, 0, 16, 2, 2, chitin)
 ds.save('RP/textures/entity/desert_stinger.png')
 
-# --- Cloud Ray (64x64) ---
-# UVs: head [0,10], body [0,0], wings [0,14], [0,21], tail [28,0]
-cr = TextureGenerator(64, 64)
-# Ethereal Blue Base
-cr.fill_rect(0, 0, 64, 64, (200, 230, 255))
-# Body (Soft Cloud)
-cr.draw_pattern(0, 0, 20, 10, (255, 255, 255), (220, 240, 255), vertical=False)
-# Wings (Wispy)
-cr.draw_pattern(0, 14, 32, 7, (180, 210, 255), (210, 240, 255))
-cr.draw_pattern(0, 21, 32, 7, (180, 210, 255), (210, 240, 255))
-# Head/Tail (Glowy bits)
-cr.fill_rect(0, 10, 10, 4, (255, 255, 255))
-cr.fill_rect(28, 0, 10, 16, (220, 240, 255))
+# --- Cloud Ray ---
+cr = ProArtist(64, 64)
+cloud = (240, 240, 255, 220)
+cr.paint_uv_box(0, 0, 8, 2, 8, cloud)
+cr.paint_uv_box(0, 10, 6, 1, 3, cloud)
+cr.paint_uv_box(0, 14, 8, 1, 6, cloud)
+cr.paint_uv_box(0, 21, 8, 1, 6, cloud)
+cr.paint_uv_box(28, 0, 2, 1, 8, cloud)
 cr.save('RP/textures/entity/cloud_ray.png')
+
+# Icon
+icon = ProArtist(64, 64, (34, 139, 34, 255))
+icon.brush_stroke(16, 16, 32, 32, (101, 67, 33), 0.8)
+icon.save('BP/pack_icon.png')
+icon.save('RP/pack_icon.png')
