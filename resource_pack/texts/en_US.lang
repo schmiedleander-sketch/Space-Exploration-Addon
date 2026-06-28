@@ -1,6 +1,7 @@
 pack.name=Space Exploration RP
 pack.description=Space Exploration Addon - Resource Pack
 entity.space:rocket.name=Rocket
+item.space:rocket_item.name=Rocket
 item.space:rocket_fuel.name=Rocket Fuel
 item.space:space_helmet.name=Space Helmet
 item.space:space_chestplate.name=Space Suit

@@ -1,7 +1,14 @@
-import { world, system } from "@minecraft/server";
+import { world, system, DynamicPropertiesDefinition } from "@minecraft/server";
 
 const SPACE_HEIGHT = 320;
 const OXYGEN_MAX = 200; // 10 seconds of oxygen
+let currentTick = 0;
+
+world.beforeEvents.worldInitialize.subscribe((event) => {
+    const def = new DynamicPropertiesDefinition();
+    def.defineNumber("oxygen");
+    event.propertyDefinitions.defineEntityProperties(def, "minecraft:player");
+});
 
 world.afterEvents.playerSpawn.subscribe((event) => {
     const player = event.player;
@@ -11,12 +18,13 @@ world.afterEvents.playerSpawn.subscribe((event) => {
 });
 
 system.runInterval(() => {
+    currentTick += 5;
     for (const player of world.getAllPlayers()) {
         const pos = player.location;
         const dimension = player.dimension;
         const isPlayerInSpace = pos.y > SPACE_HEIGHT || dimension.id === "minecraft:the_end";
 
-        // Handle Oxygen (every 5 ticks, effectively)
+        // Handle Oxygen (every 5 ticks)
         let oxygen = player.getDynamicProperty("oxygen") ?? OXYGEN_MAX;
         const hasSpaceSuit = checkSpaceSuit(player);
 
@@ -43,19 +51,48 @@ system.runInterval(() => {
     }
 }, 5);
 
-// Rocket logic runs more frequently for smoothness, but we only check riding players
+// Rocket logic runs more frequently for smoothness
 system.runInterval(() => {
-    const rockets = world.getDimension("minecraft:overworld").getEntities({ type: "space:rocket" });
-    const moonRockets = world.getDimension("minecraft:the_end").getEntities({ type: "space:rocket" });
+    const overworld = world.getDimension("minecraft:overworld");
+    const end = world.getDimension("minecraft:the_end");
 
-    [...rockets, ...moonRockets].forEach(rocket => {
+    const rockets = [...overworld.getEntities({ type: "space:rocket" }), ...end.getEntities({ type: "space:rocket" })];
+
+    rockets.forEach(rocket => {
         const rideable = rocket.getComponent("minecraft:rideable");
         const riders = rideable?.getRiders();
 
         if (riders && riders.length > 0) {
             const rider = riders[0];
-            // Rocket goes up
-            rocket.applyImpulse({ x: 0, y: 0.1, z: 0 }); // Reduced impulse for smoother flight
+
+            // Fuel Check: Requires Rocket Fuel in player inventory to fly
+            const inventory = rider.getComponent("minecraft:inventory");
+            let hasFuel = false;
+
+            if (inventory && inventory.container) {
+                for (let i = 0; i < inventory.container.size; i++) {
+                    const item = inventory.container.getItem(i);
+                    if (item?.typeId === "space:rocket_fuel") {
+                        hasFuel = true;
+                        // Consume fuel slowly (roughly every 20 ticks)
+                        if (currentTick % 20 === 0) {
+                            if (item.amount > 1) {
+                                item.amount -= 1;
+                                inventory.container.setItem(i, item);
+                            } else {
+                                inventory.container.setItem(i, undefined);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (hasFuel) {
+                rocket.applyImpulse({ x: 0, y: 0.1, z: 0 });
+            } else {
+                rider.onScreenDisplay.setActionBar("§cNo Rocket Fuel!§r");
+            }
 
             if (rocket.dimension.id === "minecraft:overworld" && rocket.location.y > SPACE_HEIGHT + 20) {
                 rider.teleport({ x: 0, y: 100, z: 0 }, { dimension: world.getDimension("minecraft:the_end") });
@@ -74,10 +111,11 @@ function checkSpaceSuit(player) {
     const equipment = player.getComponent("minecraft:equippable");
     if (!equipment) return false;
 
-    const head = equipment.getEquipment("head");
-    const chest = equipment.getEquipment("chest");
-    const legs = equipment.getEquipment("legs");
-    const feet = equipment.getEquipment("feet");
+    // Use casing that matches Bedrock Script API expectations
+    const head = equipment.getEquipment("Head");
+    const chest = equipment.getEquipment("Chest");
+    const legs = equipment.getEquipment("Legs");
+    const feet = equipment.getEquipment("Feet");
 
     return head?.typeId === "space:space_helmet" &&
            chest?.typeId === "space:space_chestplate" &&
