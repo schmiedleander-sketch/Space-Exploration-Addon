@@ -1,0 +1,30 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "mm:cloud_ray",
+      "materials": {
+        "default": "phantom"
+      },
+      "textures": {
+        "default": "textures/entity/cloud_ray"
+      },
+      "geometry": {
+        "default": "geometry.cloud_ray"
+      },
+      "animations": {
+        "fly": "animation.phantom.flap"
+      },
+      "scripts": {
+        "animate": [
+          "fly"
+        ]
+      },
+      "render_controllers": [ "controller.render.phantom" ],
+      "spawn_egg": {
+        "base_color": "#ADD8E6",
+        "overlay_color": "#FFFFFF"
+      }
+    }
+  }
+}

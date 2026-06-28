@@ -1,0 +1,18 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "More Mobs Addon - Resource Pack",
+        "name": "More Mobs RP",
+        "uuid": "984e2fbe-0a97-4ffb-bb80-587ee68bc3aa",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 20, 0]
+    },
+    "modules": [
+        {
+            "description": "More Mobs Addon - Resource Pack",
+            "type": "resources",
+            "uuid": "3963e006-52fe-4b7b-8539-b20cca95f867",
+            "version": [1, 0, 0]
+        }
+    ]
+}

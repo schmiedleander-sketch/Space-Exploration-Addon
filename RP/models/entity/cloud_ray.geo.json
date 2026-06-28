@@ -1,0 +1,67 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.cloud_ray",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 5,
+				"visible_bounds_height": 2,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{
+					"name": "body",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-4, -1, -4], "size": [8, 2, 8], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "head",
+					"parent": "body",
+					"pivot": [0, 0, -4],
+					"cubes": [
+						{"origin": [-3, -1, -7], "size": [6, 1, 3], "uv": [0, 10]}
+					]
+				},
+				{
+					"name": "leftWing",
+					"parent": "body",
+					"pivot": [4, 0, 0],
+					"cubes": [
+						{"origin": [4, -0.5, -3], "size": [8, 1, 6], "uv": [0, 14]}
+					]
+				},
+				{
+					"name": "leftWingTip",
+					"parent": "leftWing",
+					"pivot": [12, 0, 0]
+				},
+				{
+					"name": "rightWing",
+					"parent": "body",
+					"pivot": [-4, 0, 0],
+					"cubes": [
+						{"origin": [-12, -0.5, -3], "size": [8, 1, 6], "uv": [0, 21]}
+					]
+				},
+				{
+					"name": "rightWingTip",
+					"parent": "rightWing",
+					"pivot": [-12, 0, 0]
+				},
+				{
+					"name": "tail",
+					"parent": "body",
+					"pivot": [0, 0, 4],
+					"cubes": [
+						{"origin": [-1, -0.5, 4], "size": [2, 1, 8], "uv": [28, 0]}
+					]
+				},
+                { "name": "tailTip", "parent": "tail", "pivot": [0, 0, 12] }
+			]
+		}
+	]
+}

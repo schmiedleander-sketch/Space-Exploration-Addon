@@ -1,0 +1,10 @@
+entity.mm:forest_guardian.name=Forest Guardian
+entity.mm:desert_stinger.name=Desert Stinger
+entity.mm:cloud_ray.name=Cloud Ray
+
+item.spawn_egg.entity.mm:forest_guardian.name=Spawn Forest Guardian
+item.spawn_egg.entity.mm:desert_stinger.name=Spawn Desert Stinger
+item.spawn_egg.entity.mm:cloud_ray.name=Spawn Cloud Ray
+
+pack.name=More Mobs Addon
+pack.description=Adds unique creatures with complex behaviors and drops!

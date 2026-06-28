@@ -1,0 +1,24 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "More Mobs Addon - Behavior Pack",
+        "name": "More Mobs BP",
+        "uuid": "bf1ac739-ae2d-4bb2-bc76-d749ec1d8bb9",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 20, 0]
+    },
+    "modules": [
+        {
+            "description": "More Mobs Addon - Behavior Pack",
+            "type": "data",
+            "uuid": "a7fec0a0-d0c1-4521-a520-2eaab7c88684",
+            "version": [1, 0, 0]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "984e2fbe-0a97-4ffb-bb80-587ee68bc3aa",
+            "version": [1, 0, 0]
+        }
+    ]
+}

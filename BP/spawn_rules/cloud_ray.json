@@ -1,0 +1,26 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:spawn_rules": {
+    "description": {
+      "identifier": "mm:cloud_ray",
+      "population_control": "animal"
+    },
+    "conditions": [
+      {
+        "minecraft:spawns_on_surface": {},
+        "minecraft:brightness_filter": {
+          "min_light_level": 8,
+          "max_light_level": 15,
+          "adjust_for_weather": false
+        },
+        "minecraft:weight": {
+          "default": 15
+        },
+        "minecraft:height_filter": {
+          "min": 100,
+          "max": 256
+        }
+      }
+    ]
+  }
+}
